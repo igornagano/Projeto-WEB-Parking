@@ -49,20 +49,20 @@ module.exports = (sequelize, Sequelize) => {
 				defaultValue: '0'
 			}
 		}, {
-			hooks: {
+			/*hooks: {
 				beforeCreate: usuario => {
 					const salt = bcryt.genSaltSync();
-					user.senha = bcryt.hashSync(usuario.senha, salt);
+					Usuario.senha = bcryt.hashSync(Usuario.senha, salt);
 				}
-			},
+			},*/
 			classMethods: {
 				associate: (models) => {
-					Usuario.hasMany(models.Cliente);
-					Usuario.hasMany(models.Colaborador);
-				},
+					Usuario.hasOne(models.Cliente);
+					Usuario.hasOne(models.Colaborador);
+				}/*,
 				isPassword: (encodedPassword, senha) => {
 					return bcryt.compareSync(senha, encodedPassword);
-				}
+				}*/
 			}
 		});
 	return Usuario;

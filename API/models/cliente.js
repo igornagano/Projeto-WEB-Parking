@@ -5,15 +5,6 @@ module.exports = (sequelize, Sequelize) => {
 				primaryKey: true,
 				autoIncrement: true
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Cliente.belongsTo(models.Usuario);
-					Cliente.hasMany(models.Veiculo);
-					Cliente.hasMany(models.Reserva);
-				}
-			}
 		});
 	return Cliente;
 };

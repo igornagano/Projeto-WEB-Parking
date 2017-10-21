@@ -2,7 +2,7 @@ module.exports = app => {
 	const Empresa = app.db.models.Empresa;
 
 	app.route("/empresa")
-		.all((app.auth.authenticate()) => {
+		.all((req, res, next) => {
 			delete req.body.id;
 			next();
 		})
@@ -22,7 +22,7 @@ module.exports = app => {
 		});
 
 	app.route("/empresa/:id")
-		.all((app.auth.authenticate()) => {
+		.all((req, res, next) => {
 			delete req.body.id;
 			next();
 		})
@@ -41,7 +41,7 @@ module.exports = app => {
 		})
 		.put((req, res) => {
 			Empresa.update(req.body, {where: req.params})
-				then(result => res.sendStatus(204))
+				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
