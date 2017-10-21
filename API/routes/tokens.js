@@ -1,7 +1,7 @@
 var jwt = require("jwt-simple");
 
 module.exports = app => {
-	const cfg = app.libs.config;
+	const cfg = app.API.libs.config;
 	const Usuario = app.db.models.Usuario;
 
 	app.post("/token", (req, res) => {

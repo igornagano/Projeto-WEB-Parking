@@ -1,5 +1,4 @@
 module.exports = app => {
-
 	const Usuario = app.db.models.Usuario;
 
 	app.get("/usuario/:id", (req, res) => {
