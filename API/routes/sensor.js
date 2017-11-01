@@ -1,5 +1,8 @@
 module.exports = app => {
 	const Sensor = app.db.models.Sensor;
+	const Vaga = app.db.models.Vaga;
+
+	Sensor.belongsTo(Vaga, {as: "Vaga",through: "Sensor_Vaga", foreignKey: "id_vaga"});
 
 	app.route("/sensor")
 		.all((req,res, next) => {
@@ -7,7 +10,7 @@ module.exports = app => {
 			next();
 		})
 		.get((req, res) => {
-			Sensor.findAll({})
+			Sensor.findAll({include: [{all: true}]})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
@@ -21,13 +24,14 @@ module.exports = app => {
 				});
 		});
 
-	app.route("/sensor/:id")
+	app.route("/sensor/:id_sensor")
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
 		})
 		.get((req, res) => {
-			Sensor.findOne({where: req.params})
+			Sensor.findOne({where: req.params},{
+				include: [{model: Vaga, as: "Vaga"}]})
 				.then(result => {
 					if(result) {
 						res.json(result);
@@ -41,14 +45,14 @@ module.exports = app => {
 		})
 		.put((req, res) => {
 			Sensor.update(req.body, {where: req.params})
-				then(result => res.sendStatus(204))
+				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
 		})
 		.delete((req, res) => {
 			Sensor.destroy({where: req.params})
-				then(result => res.sendStatus(204))
+				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});

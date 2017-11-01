@@ -1,19 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
 	const Colaborador = sequelize.define("Colaborador", {
-			id: {
+			id_colaborador: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Colaborador.belongsTo(models.Usuario);
-					Colaborador.belongsTo(models.Empresa);
-					Colaborador.hasMany(models.Gestor);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Colaborador;
 };

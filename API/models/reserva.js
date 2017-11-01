@@ -1,14 +1,14 @@
 module.exports = (sequelize, Sequelize) => {
 	const Reserva = sequelize.define("Reserva", {
-			id: {
+			id_reserva: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			},
 			situacao: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false,
-				defaultValue: '0'
+				defaultValue: 'A'
 			},
 			hora_entrada: {
 				type: Sequelize.TIME,
@@ -32,24 +32,23 @@ module.exports = (sequelize, Sequelize) => {
 				allowNull: false
 			},
 			preco: {
-				type: Sequelize.DECIMAL,
+				type: Sequelize.DECIMAL(10,2),
 				allowNull: false
 			},
 			pago: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false,
+				defaultValue: 'N',
 				validate: {
 					notEmpty: true
 				}
 			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	
-		Reserva.associate = function (models) {
-			Reserva.belongsTo(models.Cliente);
-			Reserva.belongsTo(models.Veiculo);
-			Reserva.belongsTo(models.Vaga);
-
-		};
+		
 				
 		
 	return Reserva;

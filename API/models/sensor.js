@@ -1,26 +1,21 @@
 module.exports = (sequelize, Sequelize) => {
 	const Sensor = sequelize.define("Sensor", {
-			id: {
+			id_sensor: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			},
 			situacao: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false,
-				defaultValue: '0'
+				defaultValue: 'L'
 			},
-			Vaga_id_vaga: {
-				type: Sequelize.INTEGER,
-				allowNull: false
+			tempo_resposta: {
+				type: Sequelize.STRING(45)
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Sensor.belongsTo(models.Vaga);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Sensor;
 };

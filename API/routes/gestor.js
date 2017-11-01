@@ -1,6 +1,9 @@
 
 module.exports = app => {
 	const Gestor = app.db.models.Gestor;
+	const Colaborador = app.db.models.Colaborador;
+
+	Gestor.belongsTo(Colaborador,  {as: "Colaborador",through: "Gestor_Colaborador", foreignKey: "id_colaborador"});
 
 	app.route("/gestor")
 		.all((req,res, next) => {
@@ -8,7 +11,9 @@ module.exports = app => {
 			next();
 		})
 		.get((req, res) => {
-			Gestor.findAll({})
+			Gestor.findAll({
+				include: [{all: true}]
+			})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
@@ -22,7 +27,7 @@ module.exports = app => {
 				});
 		});
 
-	app.route("/gestor/:id")
+	app.route("/gestor/:id_gestor")
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
@@ -42,14 +47,14 @@ module.exports = app => {
 		})
 		.put((req, res) => {
 			Gestor.update(req.body, {where: req.params})
-				then(result => res.sendStatus(204))
+				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
 		})
 		.delete((req, res) => {
 			Gestor.destroy({where: req.params})
-				then(result => res.sendStatus(204))
+				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});

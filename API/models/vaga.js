@@ -1,12 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
 	const Vaga = sequelize.define("Vaga", {
-			id: {
+			id_vaga: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			},
 			setor: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false
 			},
 			numero: {
@@ -14,26 +14,17 @@ module.exports = (sequelize, Sequelize) => {
 				allowNull: false
 			},
 			tipo: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false
 			},
 			situacao: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(1),
 				allowNull: false,
-				defaultValue: '0'
-			},
-			Estabelecimento_id_estabelecimento: {
-				type: Sequelize.INTEGER,
-				allowNull: false
+				defaultValue: 'L'
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Vaga.belongsTo(models.Estabelecimento);
-					Vaga.hasOne(models.Sensor);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Vaga;
 };

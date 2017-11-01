@@ -1,17 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
 	const Gestor = sequelize.define("Gestor", {
-			id: {
+			id_gestor: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Gestor.belongsTo(models.Colaborador);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Gestor;
 };

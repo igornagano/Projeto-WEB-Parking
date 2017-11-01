@@ -1,32 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
 	const Estabelecimento = sequelize.define("Estabelecimento", {
-			id: {
+			id_estabelecimento: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			},
 			unidade: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(45),
 				allowNull: false,
 				validate: {
 					notEmpty: true
 				}
 			},
 			endereco: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				validate: {
-					notEmpty: true
-				}
+				type: Sequelize.STRING(100)
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Estabelecimento.belongsTo(models.Empresa);
-					Estabelecimento.hasMany(models.Vaga);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Estabelecimento;
 };

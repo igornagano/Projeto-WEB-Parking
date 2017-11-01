@@ -56,8 +56,9 @@ module.exports = app => {
 				res.status(412).json({msg: error.message});
 			});
 
-		})
-	app.route("/cliente/:id")
+		});
+		
+	app.route("/cliente/:id_cliente")
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
@@ -84,9 +85,8 @@ module.exports = app => {
 				Usuario.update({
 					nome: req.body.nome,
 					telefone: req.body.telefone,
-					cpf: req.body.cpf,
-					situacao: req.body.situacao
-				}, {where: {id: clientes.Usuarios.id}})
+					cpf: req.body.cpf
+				}, {where: {id: clientes.Usuarios.id_usuario}})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
@@ -97,8 +97,18 @@ module.exports = app => {
 			});
 		})
 		.delete((req, res) => {
-			Cliente.destroy({where: req.params})
-				then(result => res.sendStatus(204))
+			Cliente.findOne({where: req.params,
+			include: [{model: Usuario, as: "Usuarios"}]})
+			.then(clientes=> {
+				console.log(req.params);
+				Usuario.update({
+					situacao: "I"
+				}, {where: {id: clientes.Usuarios.id_usuario}})
+				.then(result => res.sendStatus(204))
+				.catch(error => {
+					res.status(412).json({msg: error.message});
+				});
+			})
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});

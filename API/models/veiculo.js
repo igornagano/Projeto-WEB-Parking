@@ -1,26 +1,26 @@
 module.exports = (sequelize, Sequelize) => {
 	const Veiculo = sequelize.define("Veiculo", {
-			id: {
+			id_veiculo: {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
 			},
 			marca: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(45),
 				allowNull: false,
 				validate: {
 					notEmpty: true
 				}
 			},
 			modelo: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(45),
 				allowNull: false,
 				validate: {
 					notEmpty: true
 				}
 			},
 			ano: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(4),
 				allowNull: false,
 				validate: {
 					notEmpty: true
@@ -28,20 +28,15 @@ module.exports = (sequelize, Sequelize) => {
 
 			},
 			placa: {
-				type: Sequelize.CHAR,
+				type: Sequelize.CHAR(7),
 				allowNull: false,
 				validate: {
 					notEmpty: true
 				}
 			}
-		}, {
-
-			classMethods: {
-				associate: (models) => {
-					Veiculo.belongsTo(models.Cliente);
-					Veiculo.hasMany(models.Reserva);
-				}
-			}
+		},{
+			timestamps: false, 
+			freezeTableName: true
 		});
 	return Veiculo;
 };
