@@ -8,7 +8,7 @@ var io = require("socket.io")(http);
 
 app.get("/", function(req, res){
 	res.sendfile("index.html");//Página que será enviado a informações
-	
+
 });
 
 var mySocket;
@@ -25,12 +25,12 @@ parser.on('data', function(dados){
 	io.emit("dadoArduino",{//Nome de Evento
 		valor: dados//Parametro de valores enviados
 	});
-	
+
 });
 
 io.on("connection", function(socket){
 	console.log("Conectado!");
 });
 http.listen(8000, function(){
-	console.log("Usuario na pagina");
+	console.log("Sistema iniciado com sucesso!");
 });
