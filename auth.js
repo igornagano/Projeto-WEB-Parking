@@ -3,7 +3,7 @@ var {Strategy} = require("passport-jwt");
 
 module.exports = app => {
 	const Usuario = app.db.models.Usuario;
-	const cfg = app.libs.config;
+	const cfg = app.API.libs.config;
 	const strategy = new Strategy({secretOrKey: cfg.jwtSecret}, 
 			(payload, done) => {
 				Usuario.findById(payload.id)

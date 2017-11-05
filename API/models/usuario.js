@@ -1,4 +1,4 @@
-var bcrypt = require("bcrypt");
+//var bcrypt = require("bcrypt");
 
 module.exports = (sequelize, Sequelize) => {
 	const Usuario = sequelize.define("Usuario", {
@@ -51,7 +51,7 @@ module.exports = (sequelize, Sequelize) => {
 				defaultValue: 'A'
 			}
 		}, {
-			timestamps: false, 
+			timestamps: false,
 			freezeTableName: true
 		/*
 			hooks: {

@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/public'));
 consign()
 	.include("API/libs/config.js")
 	.then("db.js")
-	.then("auth.js")
+	//.then("auth.js")
 	.then("API/libs/middlewares.js")
 	.then("API/routes")
 	.then("API/libs/boot.js")
