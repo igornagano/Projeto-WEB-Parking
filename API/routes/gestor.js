@@ -9,8 +9,8 @@ module.exports = app => {
 		.all((req,res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/gestor", (req, res) => {
 			Gestor.findAll({
 				include: [{all: true}]
 			})
@@ -19,7 +19,7 @@ module.exports = app => {
 					res.status(412).json({msg: error.message});
 				});
 		})
-		.post((req, res) => {
+	app.post("/gestor", (req, res) => {
 			Gestor.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -27,12 +27,12 @@ module.exports = app => {
 				});
 		});
 
-	app.route("/gestor/:id_gestor")
+	app.route("/gestor/:id_colaborador")
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/gestor/:id_colaborador", (req, res) => {
 			Gestor.findOne({where: req.params})
 				.then(result => {
 					if(result) {
@@ -44,15 +44,15 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/gestor/:id_colaborador", (req, res) => {
 			Gestor.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/gestor/:id_colaborador", (req, res) => {
 			Gestor.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {

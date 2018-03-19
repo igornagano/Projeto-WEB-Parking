@@ -8,8 +8,8 @@ module.exports = app => {
 		.all((req,res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/estabelecimento", (req, res) => {
 			Estabelecimento.findAll({
 				include: [{all: true}]
 			})
@@ -17,8 +17,8 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res) => {
+		});
+	app.post("/estabelecimento", (req, res) => {
 			Estabelecimento.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -30,8 +30,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/estabelecimento/empresa/:id_empresa", (req, res) => {
 			Estabelecimento.findAll({
 				where: req.params,
 				include: [{all: true}]
@@ -40,14 +40,14 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
+		});
 
 	app.route("/estabelecimento/:id_estabelecimento")
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/estabelecimento/:id_estabelecimento", (req, res) => {
 			Estabelecimento.findOne({where: req.params,
 				include: [{model: Empresa, as: "Empresa"}]})
 				.then(result => {
@@ -60,15 +60,15 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/estabelecimento/:id_estabelecimento", (req, res) => {
 			Estabelecimento.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/estabelecimento/:id_estabelecimento", (req, res) => {
 			Estabelecimento.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {

@@ -10,7 +10,7 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		})
-		.get((req, res) => {
+	app.get("/veiculo", (req, res) => {
 			Veiculo.findAll({
 				include: [{all:true}]})
 				.then(result => res.json(result))
@@ -18,7 +18,7 @@ module.exports = app => {
 					res.status(412).json({msg: error.message});
 				});
 		})
-		.post((req, res) => {
+	app.post("/veiculo", (req, res) => {
 			Veiculo.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -29,8 +29,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/veiculo/cliente/:id_cliente", (req, res) => {
 			Veiculo.findAll({where: req.params, 
 				include: [{model: Cliente, as: "Cliente"}]
 			})
@@ -49,8 +49,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/veiculo/:id_veiculo", (req, res) => {
 			Veiculo.findOne({where: req.params, 
 				include: [{model: Cliente, as: "Cliente"}]
 			})
@@ -64,15 +64,15 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/veiculo/:id_veiculo", (req, res) => {
 			Veiculo.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/veiculo/:id_veiculo", (req, res) => {
 			Veiculo.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {

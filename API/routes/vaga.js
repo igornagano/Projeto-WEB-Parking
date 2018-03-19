@@ -11,14 +11,14 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		})
-		.get((req, res) => {
+	app.get("/vaga", (req, res) => {
 			Vaga.findAll({include: [{all:true}]})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res) => {
+		});
+	app.post("/vaga", (req, res) => {
 			Vaga.create({
 				setor: req.body.setor,
 				numero: req.body.numero,
@@ -43,7 +43,7 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		})
-		.get((req, res) => {
+	app.get("/vaga/estabelecimento/:id_estabelecimento", (req, res) => {
 			Vaga.findAll({where: req.params,
 				include: [{model: Estabelecimento, as: "Estabelecimento"},{model: Sensor, as: "Sensor"}]})
 				.then(result => {
@@ -61,8 +61,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/vaga/:id_vaga", (req, res) => {
 			Vaga.findOne({where: req.params,
 				include: [{model: Estabelecimento, as: "Estabelecimento"},{model: Sensor, as: "Sensor"}]})
 				.then(result => {
@@ -75,8 +75,8 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/vaga/:id_vaga", (req, res) => {
 			Vaga.update({
 				setor: req.body.setor,
 				numero: req.body.numero,
@@ -99,8 +99,8 @@ module.exports = app => {
 					res.status(412).json({msg: error.message});
 				});
 
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/vaga/:id_vaga", (req, res) => {
 			Vaga.update({
 				situacao: "O"
 			},{where: req.params})

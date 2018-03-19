@@ -8,15 +8,15 @@ module.exports = app => {
 		.all((req,res, next) => {
 			delete req.body.id_sensor;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/sensor", (req, res) => {
 			Sensor.findAll({include: [{all: true}]})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res) => {
+		});
+	app.post("/sensor", (req, res) => {
 			Sensor.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -28,8 +28,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/sensor/:id_sensor", (req, res) => {
 			Sensor.findOne({where: req.params},{
 				include: [{model: Vaga, as: "Vaga"}]})
 				.then(result => {
@@ -42,15 +42,15 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
-			Sensor.update(req.body, {where: req.params})
+		});
+	app.put("/sensor/:id_sensor", (req, res) => {
+					Sensor.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/sensor/:id_sensor", (req, res) => {
 			Sensor.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {

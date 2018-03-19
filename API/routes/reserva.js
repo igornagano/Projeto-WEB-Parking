@@ -14,14 +14,14 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		})
-		.get((req, res) => {
+	app.get("/reserva", (req, res) => {
 			Reserva.findAll({include:[{all: true}]})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res) => {
+		});
+	app.post("/reserva", (req, res) => {
 			Reserva.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -33,8 +33,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/reserva/:id_reserva", (req, res) => {
 			Reserva.findOne({where: req.params},{
 				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
 				.then(result => {
@@ -47,15 +47,15 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/reserva/:id_reserva", (req, res) => {
 			Reserva.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/reserva/:id_reserva", (req, res) => {
 			Reserva.update({situacao: "D"},{where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {

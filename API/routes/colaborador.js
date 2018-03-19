@@ -13,8 +13,8 @@ module.exports = app => {
 		.all((req,res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/colaborador/", (req, res) => {
 			Colaborador.findAll({
 			include: [{all: true}]
 				})
@@ -22,8 +22,8 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res) => {
+		});
+	app.post("/colaborador/", (req, res) => {
 				Usuario.create({
 					email: req.body.email,
 					nome: req.body.nome,
@@ -49,8 +49,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req,res)=>{
+		});
+	app.get("/colaborador/usuario/:email", (req, res) => {
 			Usuario.findOne({where: req.params,
 				include: [{model: Colaborador, as: "Colaboradores"}]}
 			)
@@ -71,7 +71,7 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		})
-		.get((req,res)=>{
+	app.get("/colaborador/empresa/:id_empresa", (req, res) => {
 			Colaborador.findAll({where: req.params,
 				include: [{model: Usuario, as: "Usuario"},{model: Empresa, as: "Empresa"}]}
 			)
@@ -91,8 +91,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/colaborador/:id_colaborador", (req, res) => {
 			Colaborador.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"},{model: Empresa, as: "Empresas"}]})
 				.then(result => {
@@ -105,8 +105,9 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/colaborador/:id_colaborador", (req, res) => {
+
 			Colaborador.update(req.body, {where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(colaborador=> {
@@ -126,10 +127,10 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
+		});
 
 
-		.delete((req, res) => {
+	app.delete("/colaborador/:id_colaborador", (req, res) => {
 			Colaborador.update(req.body, {where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(colaborador=> {

@@ -1,4 +1,9 @@
 module.exports = app => {
+
+	var bcrypt = require("bcrypt");
+	const saltRounds = 10;
+	var salt = bcrypt.genSaltSync(saltRounds);
+
 	
 	const Usuario = app.db.models.Usuario;
     const Cliente = app.db.models.Cliente;
@@ -8,19 +13,19 @@ module.exports = app => {
 	
 	app.route("/cliente")
 		.all((req,res, next) => {
-			delete req.body.id;
+			delete req.body.id_cliente;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/cliente", (req, res) => {
 			Cliente.findAll({
 				include: [{all: true}]})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.post((req, res, next) => {
-			
+		});
+	app.post("/cliente", (req, res) => {
+			req.body.senha = bcrypt.hashSync(req.body.senha, salt);
 			Usuario.create(req.body)
 				.then(usuarios => {
 					return usuarios.createClientes({})
@@ -38,10 +43,10 @@ module.exports = app => {
 		});
 	app.route("/cliente/usuario/:email")
 		.all((req, res, next) => {
-			delete req.body.id;
+			delete req.body.id_cliente;
 			next();
-		})
-		.get((req,res)=>{
+		});
+	app.get("/cliente/usuario/:email", (req, res) => {
 			Usuario.findOne({where: req.params,
 				include: [{model: Cliente, as: "Clientes"}]}
 			)
@@ -62,8 +67,8 @@ module.exports = app => {
 		.all((req, res, next) => {
 			delete req.body.id;
 			next();
-		})
-		.get((req, res) => {
+		});
+	app.get("/cliente/:id_cliente", (req, res) => {
 			Cliente.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 				.then(result => {
@@ -76,8 +81,8 @@ module.exports = app => {
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		})
-		.put((req, res) => {
+		});
+	app.put("/cliente/:id_cliente", (req, res) => {
 			Cliente.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(clientes=> {
@@ -95,8 +100,8 @@ module.exports = app => {
 			.catch(error => {
 				res.status(412).json({msg: error.message});
 			});
-		})
-		.delete((req, res) => {
+		});
+	app.delete("/cliente/:id_cliente", (req, res) => {
 			Cliente.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(clientes=> {
