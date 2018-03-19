@@ -1,16 +1,22 @@
 var passport =  require("passport");
-var {Strategy} = require("passport-jwt");
+var passportJWT = require("passport-jwt");
+var ExtractJwt = passportJWT.ExtractJwt;
+var Strategy = passportJWT.Strategy;
+const Usuario =require("./API/models/Usuario.js");
+const cfg = require("./API/libs/config.js");
+var params = {
+  secretOrKey: cfg.jwtSecret,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+};
 
-module.exports = app => {
-	const Usuario = app.db.models.Usuario;
-	const cfg = app.API.libs.config;
-	const strategy = new Strategy({secretOrKey: cfg.jwtSecret}, 
-			(payload, done) => {
-				Usuario.findById(payload.id)
+module.exports = function() {
+	var strategy = new Strategy(params, function(payload, done) {
+				Usuario.findById(payload.id_usuario)
 				.then(usuario => {
 					if(usuario){
+						console.log("Autenticado");
 						return done(null, {
-							id: usuario.id,
+							id: usuario.id_usuario,
 							email: usuario.email
 						});
 					}
