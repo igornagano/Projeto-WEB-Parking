@@ -19,6 +19,7 @@ module.exports = app => {
 				});
 		})
 	app.post("/veiculo", (req, res) => {
+		console.log(req.body);
 			Veiculo.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {

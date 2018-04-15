@@ -1,8 +1,6 @@
 module.exports = app => {
 
-	var bcrypt = require("bcrypt");
-	const saltRounds = 10;
-	var salt = bcrypt.genSaltSync(saltRounds);
+	
 
 	
 	const Usuario = app.db.models.Usuario;
@@ -25,7 +23,6 @@ module.exports = app => {
 				});
 		});
 	app.post("/cliente", (req, res) => {
-			req.body.senha = bcrypt.hashSync(req.body.senha, salt);
 			Usuario.create(req.body)
 				.then(usuarios => {
 					return usuarios.createClientes({})
@@ -91,7 +88,7 @@ module.exports = app => {
 					nome: req.body.nome,
 					telefone: req.body.telefone,
 					cpf: req.body.cpf
-				}, {where: {id: clientes.Usuarios.id_usuario}})
+				}, {where: {id_usuario: clientes.Usuarios.id_usuario}})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
@@ -108,7 +105,7 @@ module.exports = app => {
 				console.log(req.params);
 				Usuario.update({
 					situacao: "I"
-				}, {where: {id: clientes.Usuarios.id_usuario}})
+				}, {where: {id_usuario: clientes.Usuarios.id_usuario}})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});

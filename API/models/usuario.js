@@ -1,5 +1,5 @@
-//var bcrypt = require("bcrypt");
-
+var bcrypt = require("bcrypt");
+var aut = "";
 module.exports = (sequelize, Sequelize) => {
 	const Usuario = sequelize.define("Usuario", {
 			id_usuario: {
@@ -51,7 +51,7 @@ module.exports = (sequelize, Sequelize) => {
 				defaultValue: 'A'
 			}
 		}, {
-			timestamps: false,
+			timestamps: false, 
 			freezeTableName: true
 		/*
 			hooks: {
@@ -65,10 +65,9 @@ module.exports = (sequelize, Sequelize) => {
 					Usuario.hasMany(models.Cliente);
 					Usuario.hasMany(models.Colaborador);
 				},
-				isPassword: (encodedPassword, senha) => {
-					return bcryt.compareSync(senha, encodedPassword);
-				}
+				
 			}*/
 		});
+	
 	return Usuario;
 };
