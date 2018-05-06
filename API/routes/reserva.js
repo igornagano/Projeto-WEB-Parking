@@ -48,6 +48,36 @@ module.exports = app => {
 					res.status(412).json({msg: error.message});
 				});
 		});
+
+	app.get("/reserva/cliente/:id_cliente", (req, res) => {
+			Reserva.findAll({where: req.params},{
+				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
+				.then(result => {
+					if(result) {
+						res.json(result);
+					} else {
+						res.sendStatus(404);
+					}
+				})
+				.catch(error => {
+					res.status(412).json({msg: error.message});
+				});
+		});
+
+	app.get("/reserva/estabelecimento/:id_estabelecimento", (req, res) => {
+			Reserva.findAll({where: req.params},{
+				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
+				.then(result => {
+					if(result) {
+						res.json(result);
+					} else {
+						res.sendStatus(404);
+					}
+				})
+				.catch(error => {
+					res.status(412).json({msg: error.message});
+				});
+		});
 	app.put("/reserva/:id_reserva", (req, res) => {
 			Reserva.update(req.body, {where: req.params})
 				.then(result => res.sendStatus(204))

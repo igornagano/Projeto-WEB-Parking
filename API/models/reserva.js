@@ -29,11 +29,12 @@ module.exports = (sequelize, Sequelize) => {
 			},
 			tempo_atraso: {
 				type: Sequelize.TIME,
-				allowNull: false
+				allowNull: false,
+				defaultValue: '0'
 			},
 			preco: {
 				type: Sequelize.DECIMAL(10,2),
-				allowNull: false
+				allowNull: true
 			},
 			pago: {
 				type: Sequelize.CHAR(1),
