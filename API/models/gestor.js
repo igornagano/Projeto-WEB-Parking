@@ -4,6 +4,12 @@ module.exports = (sequelize, Sequelize) => {
 				type: Sequelize.INTEGER,
 				primaryKey: true,
 				autoIncrement: true
+			},
+			proprietario:{
+				type: Sequelize.CHAR(1),
+				allowNull: false,
+				defaultValue: 'N'
+
 			}
 		},{
 			timestamps: false, 

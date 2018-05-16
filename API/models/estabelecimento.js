@@ -14,6 +14,12 @@ module.exports = (sequelize, Sequelize) => {
 			},
 			endereco: {
 				type: Sequelize.STRING(100)
+			},
+			horario_inicio: {
+				type: Sequelize.TIME
+			},
+			horario_fim: {
+				type: Sequelize.TIME
 			}
 		},{
 			timestamps: false, 

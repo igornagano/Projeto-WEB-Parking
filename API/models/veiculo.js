@@ -33,7 +33,10 @@ module.exports = (sequelize, Sequelize) => {
 				validate: {
 					notEmpty: true
 				}
-			}
+			},
+			cor: {
+				type: Sequelize.STRING(45),
+			},
 		},{
 			timestamps: false, 
 			freezeTableName: true

@@ -3,10 +3,11 @@ module.exports = app => {
 	const Cliente = app.db.models.Cliente;
 	const Vaga = app.db.models.Vaga;
 	const Veiculo = app.db.models.Veiculo;
+	const Estabelecimento = app.db.models.Estabelecimento;
 
 	Reserva.belongsTo(Cliente, {as: "Cliente",through: "Reserva_Cliente", foreignKey: "id_cliente"});
 	Reserva.belongsTo(Veiculo, {as: "Veiculo",through: "Reserva_Veiculo", foreignKey: "id_veiculo"});
-	Reserva.belongsTo(Vaga, {as: "Vaga",through: "Reserva_Vaga", foreignKey: "id_vaga"});
+	Reserva.belongsTo(Estabelecimento, {as: "Estabelecimento",through: "Reserva_Estabelecimento", foreignKey: "id_estabelecimento"});
 
 
 	app.route("/reserva")
@@ -35,8 +36,8 @@ module.exports = app => {
 			next();
 		});
 	app.get("/reserva/:id_reserva", (req, res) => {
-			Reserva.findOne({where: req.params},{
-				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
+			Reserva.findOne({where: req.params,
+				include: [{all: true}]})
 				.then(result => {
 					if(result) {
 						res.json(result);
@@ -50,8 +51,8 @@ module.exports = app => {
 		});
 
 	app.get("/reserva/cliente/:id_cliente", (req, res) => {
-			Reserva.findAll({where: req.params},{
-				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
+			Reserva.findAll({where: req.params,
+				include: [{all: true}]})
 				.then(result => {
 					if(result) {
 						res.json(result);
@@ -65,8 +66,8 @@ module.exports = app => {
 		});
 
 	app.get("/reserva/estabelecimento/:id_estabelecimento", (req, res) => {
-			Reserva.findAll({where: req.params},{
-				include: [{model: Cliente, as: "Cliente"},{model: Veiculo, as: "Veiculo"}, {model: Vaga, as: "Vaga"}]})
+			Reserva.findAll({where: req.params,
+				include: [{all: true}]})
 				.then(result => {
 					if(result) {
 						res.json(result);
