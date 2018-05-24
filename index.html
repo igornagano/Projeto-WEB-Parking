@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<title> Teste de Comunicação com Arduino</title>
+	
+		<meta charset="UTF-8">
+		<script src="/socket.io/socket.io.js">
+		</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	
+
+		<style>
+			.caixa{
+				height: 150px;
+				width: 150px;
+				border-style: solid;
+				border-width: 2px;
+				background-color: green;
+				float: left;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			var matriz = [0,0];
+			
+			var socket = io();
+			socket.on("dadoArduino", function(status){
+			
+			var dados = status["valor"]; //Dados recebidos do Arduino
+			var divisor = dados.indexOf(" "); //Posicao do Divisor de Valores
+			var valor = 0; // Valor recebido do Arduino
+			var id; // ID da DIV
+			var posicao; // Posicao no Vetor Matriz
+				
+			if(dados === "1"){
+				document.getElementById("vaga").style.backgroundColor = 'red';
+				document.getElementById("porcentagem").innerHTML =  "0%";
+				sendData = {
+					"situacao": "O"
+					};
+				console.log(sendData);
+				$.ajax({
+                    url: 'http://ec2-18-228-18-49.sa-east-1.compute.amazonaws.com:8000/sensor/1',    //Your api url
+                    type: 'PUT',   //type is any HTTP method
+                    contentType: 'application/json',
+                    data:JSON.stringify(sendData),      //Data as js object
+                    success: function () {
+                    	console.log("Mudou");
+                    }
+                }).fail(function(er){
+                	console.log(er);
+                })
+			}
+			if(dados === "0"){
+				document.getElementById("vaga").style.backgroundColor = 'green';
+				document.getElementById("porcentagem").innerHTML = "100%";
+				sendData = {
+					"situacao": "L"
+				}
+				console.log(sendData);
+				$.ajax({
+                    url: 'http://ec2-18-228-18-49.sa-east-1.compute.amazonaws.com:8000/sensor/1',    //Your api url
+                    type: 'PUT',   //type is any HTTP method
+                    contentType: 'application/json',
+                    data:JSON.stringify(sendData),      //Data as js object
+                    success: function () {
+                    	console.log("Mudou");
+                    }, 
+                });
+
+			}
+		});
+		</script>
+		
+		<div class="caixa" id="vaga">
+		
+		</div>
+		<div id="porcentagem">
+			
+		</div>
+	</body>
+</html>

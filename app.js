@@ -15,10 +15,10 @@ var mySocket;
 
 var SerialPort = require('serialport');
 var Readline = SerialPort.parsers.Readline;
-var port = new SerialPort('/COM3'); //Porta do Arduino
+var port = new SerialPort('/COM5'); //Porta do Arduino
 
 //Delimita os dados recebidos no Arduino toda vez que tem quebra de linha
-var parser = port.pipe(Readline({delimiter: '\r\n'}));
+var parser = port.pipe(new Readline({delimiter: '\r\n'}));
 
 //Evento de Envio de dados para a página WEB
 parser.on('data', function(dados){
@@ -31,6 +31,6 @@ parser.on('data', function(dados){
 io.on("connection", function(socket){
 	console.log("Conectado!");
 });
-http.listen(8000, function(){
+http.listen(8200, function(){
 	console.log("Usuario na pagina");
 });
