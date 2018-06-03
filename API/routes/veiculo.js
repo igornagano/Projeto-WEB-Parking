@@ -11,7 +11,7 @@ module.exports = app => {
 			next();
 		})
 	app.get("/veiculo", (req, res) => {
-			Veiculo.findAll({
+			Veiculo.findAll({where: {ativo : 'A'},
 				include: [{all:true}]})
 				.then(result => res.json(result))
 				.catch(error => {
@@ -31,7 +31,8 @@ module.exports = app => {
 			next();
 		});
 	app.get("/veiculo/cliente/:id_cliente", (req, res) => {
-			Veiculo.findAll({where: req.params, 
+			
+			Veiculo.findAll({where: {id_cliente: req.params.id_cliente, ativo: 'A'}, 
 				include: [{model: Cliente, as: "Cliente"}]
 			})
 				.then(result => {

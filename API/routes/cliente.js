@@ -83,7 +83,6 @@ module.exports = app => {
 			Cliente.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(clientes=> {
-				console.log(req.params);
 				Usuario.update({
 					nome: req.body.nome,
 					telefone: req.body.telefone,

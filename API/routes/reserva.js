@@ -4,7 +4,8 @@ module.exports = app => {
 	const Vaga = app.db.models.Vaga;
 	const Veiculo = app.db.models.Veiculo;
 	const Estabelecimento = app.db.models.Estabelecimento;
-
+	var Sequelize = require('sequelize');
+	const Op = Sequelize.Op;
 	Reserva.belongsTo(Cliente, {as: "Cliente",through: "Reserva_Cliente", foreignKey: "id_cliente"});
 	Reserva.belongsTo(Veiculo, {as: "Veiculo",through: "Reserva_Veiculo", foreignKey: "id_veiculo"});
 	Reserva.belongsTo(Estabelecimento, {as: "Estabelecimento",through: "Reserva_Estabelecimento", foreignKey: "id_estabelecimento"});
@@ -67,6 +68,45 @@ module.exports = app => {
 
 	app.get("/reserva/estabelecimento/:id_estabelecimento", (req, res) => {
 			Reserva.findAll({where: req.params,
+				include: [{all: true}]})
+				.then(result => {
+					if(result) {
+						res.json(result);
+					} else {
+						res.sendStatus(404);
+					}
+				})
+				.catch(error => {
+					res.status(412).json({msg: error.message});
+				});
+		});
+	app.get("/reserva/estabelecimento/:id_estabelecimento/reservados", (req, res) => {
+			
+			Reserva.findAll({where: {
+				 id_estabelecimento: req.params['id_estabelecimento'],
+				 [Op.or]:[{situacao:"A"},{situacao:"E"}] 
+			},
+				include: [{all: true}]})
+				.then(result => {
+					if(result) {
+						res.json(result);
+					} else {
+						res.sendStatus(404);
+					}
+				})
+				.catch(error => {
+					res.status(412).json({msg: error.message});
+				});
+		});
+	app.get("/reserva/estabelecimento/:id_estabelecimento/:dia/:mes/:ano", (req, res) => {
+			
+			Reserva.findAll({where: {
+				 id_estabelecimento: req.params['id_estabelecimento'],
+				 data_efetuada:{
+				 	[Op.gte]:new Date(parseInt(req.params['ano']),parseInt(req.params['mes']),parseInt(req.params['dia'])),
+				 	[Op.lt]:new Date(parseInt(req.params['ano']),parseInt(req.params['mes']),parseInt(req.params['dia'])+1) 
+					}
+				},
 				include: [{all: true}]})
 				.then(result => {
 					if(result) {
