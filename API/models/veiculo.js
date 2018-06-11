@@ -37,6 +37,10 @@ module.exports = (sequelize, Sequelize) => {
 			cor: {
 				type: Sequelize.STRING(45),
 			},
+			ativo: {
+				type: Sequelize.CHAR(1),
+				defaultValue: 'A'
+			}
 		},{
 			timestamps: false, 
 			freezeTableName: true

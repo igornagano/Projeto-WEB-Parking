@@ -1,11 +1,12 @@
 module.exports = app => {
 	const Colaborador = app.db.models.Colaborador;
 	const Empresa = app.db.models.Empresa;
+	const Estabelecimento = app.db.models.Estabelecimento;
 	const Usuario = app.db.models.Usuario;
 	
-	 Usuario.hasOne(Colaborador, {as: "Colaboradores",through: "Colaborador_Usuario", foreignKey: "id_usuario"});
-	 Colaborador.belongsTo(Usuario, { as:"Usuarios",through: "Colaborador_Usuario",foreignKey: "id_usuario"});
-	
+	Usuario.hasOne(Colaborador, {as: "Colaboradores",through: "Colaborador_Usuario", foreignKey: "id_usuario"});
+	Colaborador.belongsTo(Usuario, { as:"Usuarios",through: "Colaborador_Usuario",foreignKey: "id_usuario"});
+	Colaborador.belongsTo(Estabelecimento, { as: "Estabelecimentos", through: "Colaborador_Estabelecimento", foreignKey: "id_estabelecimento"});
 	Colaborador.belongsTo(Empresa, { as: "Empresas", through: "Colaborador_Empresa", foreignKey: "id_empresa"});
 	//Empresa.hasMany(Colaborador, {as: "Colaboradores", through: "Colaborador_Empresa", foreignKey: "id_empresa"});
 	
@@ -50,15 +51,20 @@ module.exports = app => {
 			delete req.body.id;
 			next();
 		});
-	app.get("/colaborador/usuario/:email", (req, res) => {
-			Usuario.findOne({where: req.params,
+	app.post("/colaborador/usuario/login", (req, res) => {
+			Usuario.findOne({where: {'email': req.body.email},
 				include: [{model: Colaborador, as: "Colaboradores"}]}
 			)
 		.then(result => {
-				if(result) {
-					res.json(result);
+				if(result.senha == req.body.senha) {
+					Colaborador.findOne({where: {'id_usuario':result.id_usuario},
+					 include: [{all: true}]
+					}).then(resultado => {
+						resultado.Usuarios.senha = "";
+						res.json(resultado);
+					})
 				} else {
-					res.sendStatus(404);
+					res.json({'erro': "Não encontrado"});
 				}
 			})
 			.catch(error => {

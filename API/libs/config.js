@@ -6,7 +6,7 @@ module.exports = {
 		host: 'localhost',
 		dialect: 'sqlite3',
 		//storage: "path/to/database.sqlite",
-		storage: "BD.sqlite3",
+		storage: "db_projeto.sqlite3",
 		define: {
 			underscored: true
 		}
