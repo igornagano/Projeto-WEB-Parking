@@ -1,5 +1,6 @@
 var app = require("express")();
 var express = require("express");
+var request = require('request');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -22,9 +23,22 @@ var parser = port.pipe(new Readline({delimiter: '\r\n'}));
 
 //Evento de Envio de dados para a página WEB
 parser.on('data', function(dados){
-	io.emit("dadoArduino",{//Nome de Evento
-		valor: dados//Parametro de valores enviados
+	data = {
+		"situacao": "L"
+	}
+	if(dados === "1"){
+		data['situacao'] = "O"
+	}
+	request({url: 'http://ec2-18-228-18-49.sa-east-1.compute.amazonaws.com:8000/sensor/1',method: "PUT",json:data}, function(){
+		if(dados === "1"){
+			console.log("Ocupado");
+		}else{
+			console.log("Livre");
+		}
 	});
+	/*io.emit("dadoArduino",{//Nome de Evento
+		valor: dados//Parametro de valores enviados
+	});*/
 	
 });
 
