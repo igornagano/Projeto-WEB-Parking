@@ -5,12 +5,33 @@ module.exports = app => {
 	const Veiculo = app.db.models.Veiculo;
 	const Estabelecimento = app.db.models.Estabelecimento;
 	var Sequelize = require('sequelize');
+	var moment = require('moment-timezone');
 	const Op = Sequelize.Op;
 	Reserva.belongsTo(Cliente, {as: "Cliente",through: "Reserva_Cliente", foreignKey: "id_cliente"});
 	Reserva.belongsTo(Veiculo, {as: "Veiculo",through: "Reserva_Veiculo", foreignKey: "id_veiculo"});
 	Reserva.belongsTo(Estabelecimento, {as: "Estabelecimento",through: "Reserva_Estabelecimento", foreignKey: "id_estabelecimento"});
 
-
+	setInterval( () => {
+		 var agora = new Date();	
+		 Reserva.findAll({where:{situacao:"A"}, include:[{all: true}]})
+		 .then(result=>{
+		 	for(var i in result){
+		 		var hora_marcada = result[i]['hora_marcada'].split(":");
+         		var hora = hora_marcada[0];
+         		var minuto = hora_marcada[1];
+				var hora1 = new Date();
+            	hora1.setHours(hora,minuto,0 ,0);
+            	if(agora.getTime() > hora1.getTime()){
+            		
+            		Reserva.update({situacao:"C"},{where:{id_reserva:result[i]['id_reserva']}})
+            		.then(resposta=>console.log("Cancelando "+ result[i]['id_reserva']))
+            		.catch(error=> console.log(error))
+            	} 
+		 	}
+		 })
+		
+		
+	 },60000);
 	app.route("/reserva")
 		.all((req,res, next) => {
 			delete req.body.id;

@@ -19,7 +19,6 @@ module.exports = app => {
 				});
 		});
 	app.post("/estabelecimento", (req, res) => {
-		console.log(req.body);
 			Estabelecimento.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {

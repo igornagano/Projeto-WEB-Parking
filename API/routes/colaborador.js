@@ -8,7 +8,6 @@ module.exports = app => {
 	Colaborador.belongsTo(Usuario, { as:"Usuarios",through: "Colaborador_Usuario",foreignKey: "id_usuario"});
 	Colaborador.belongsTo(Estabelecimento, { as: "Estabelecimentos", through: "Colaborador_Estabelecimento", foreignKey: "id_estabelecimento"});
 	Colaborador.belongsTo(Empresa, { as: "Empresas", through: "Colaborador_Empresa", foreignKey: "id_empresa"});
-	//Empresa.hasMany(Colaborador, {as: "Colaboradores", through: "Colaborador_Empresa", foreignKey: "id_empresa"});
 	
 	app.route("/colaborador")
 		.all((req,res, next) => {
@@ -34,7 +33,8 @@ module.exports = app => {
 				})
 				.then(colaborador => {
 							return colaborador.createColaboradores({
-								"id_empresa": req.body.id_empresa
+								"id_empresa": req.body.id_empresa,
+								"id_estabelecimento": req.body.id_estabelecimento
 							})
 							.then(result=> res.json(result))
 							.catch(error => {
@@ -52,7 +52,7 @@ module.exports = app => {
 			next();
 		});
 	app.post("/colaborador/usuario/login", (req, res) => {
-			Usuario.findOne({where: {'email': req.body.email},
+			Usuario.findOne({where: {'email': req.body.email, situacao: "A"},
 				include: [{model: Colaborador, as: "Colaboradores"}]}
 			)
 		.then(result => {
@@ -78,8 +78,8 @@ module.exports = app => {
 			next();
 		})
 	app.get("/colaborador/empresa/:id_empresa", (req, res) => {
-			Colaborador.findAll({where: req.params,
-				include: [{model: Usuario, as: "Usuario"},{model: Empresa, as: "Empresa"}]}
+			Colaborador.findAll({where: {id_empresa: req.params['id_empresa']},
+				include: [{model: Usuario, as: "Usuario", where:{situacao:"A"}},{model: Empresa, as: "Empresa"}]}
 			)
 		.then(result => {
 				if(result) {
@@ -117,7 +117,6 @@ module.exports = app => {
 			Colaborador.update(req.body, {where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(colaborador=> {
-				console.log(req.params);
 				Usuario.update({
 					nome: req.body.nome,
 					telefone: req.body.telefone,
