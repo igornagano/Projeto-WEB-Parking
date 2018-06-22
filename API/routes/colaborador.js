@@ -114,22 +114,23 @@ module.exports = app => {
 		});
 	app.put("/colaborador/:id_colaborador", (req, res) => {
 
-			Colaborador.update(req.body, {where: req.params,
+			Colaborador.update({'id_empresa': req.body.id_empresa, 'id_estabelecimento': req.body.id_estabelecimento}, {where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(colaborador=> {
-				Usuario.update({
+				return Usuario.update({
 					nome: req.body.nome,
 					telefone: req.body.telefone,
-					cpf: req.body.cpf,
-					situacao: req.body.situacao
-				}, {where: {id: colaborador.Usuarios.id_usuario}})
-				.then(result => res.sendStatus(204))
+					senha: req.body.senha
+				}, {where: {id_usuario: req.body.id_usuario}})
+				.then(result =>res.sendStatus(204))
 				.catch(error => {
+					console.log(error.message);
 					res.status(412).json({msg: error.message});
 				});
-			
+				
 				})
 				.catch(error => {
+					console.log(error.message);
 					res.status(412).json({msg: error.message});
 				});
 		});
@@ -139,10 +140,9 @@ module.exports = app => {
 			Colaborador.update(req.body, {where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(colaborador=> {
-					console.log(req.params);
 					Usuario.update({
 						situacao: "I"
-					}, {where: {id: colaborador.Usuarios.id_usuario}})
+					}, {where: {id_usuario: colaborador.Usuarios.id_usuario}})
 					.then(result => res.sendStatus(204))
 					.catch(error => {
 						res.status(412).json({msg: error.message});
