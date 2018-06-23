@@ -10,7 +10,7 @@ module.exports = app => {
 			next();
 		});
 	app.get("/estabelecimento", (req, res) => {
-			Estabelecimento.findAll({
+			Estabelecimento.findAll({where: {'situacao': "A"},
 				include: [{all: true}]
 			})
 				.then(result => res.json(result))
@@ -33,9 +33,9 @@ module.exports = app => {
 		});
 	app.get("/estabelecimento/empresa/:id_empresa", (req, res) => {
 			Estabelecimento.findAll({
-				where: req.params,
+				where: {'id_empresa': req.params['id_empresa'], 'situacao': "A"},
 				include: [{all: true}]
-			})
+				})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
@@ -69,7 +69,7 @@ module.exports = app => {
 				});
 		});
 	app.delete("/estabelecimento/:id_estabelecimento", (req, res) => {
-			Estabelecimento.destroy({where: req.params})
+			Estabelecimento.update({'situacao': "I"},{where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});

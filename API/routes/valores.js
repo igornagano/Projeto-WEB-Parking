@@ -69,10 +69,10 @@ module.exports = app => {
 				});
 		});
 	app.delete("/valores/:id_valores", (req, res) => {
-			Valores.update({situacao: "D"},{where: req.params})
+			Valores.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
-		});
+			});
 }

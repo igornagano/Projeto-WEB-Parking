@@ -27,6 +27,11 @@ module.exports = (sequelize, Sequelize) => {
 					notEmpty: true
 				}
 
+			},
+			situacao: {
+				type: Sequelize.CHAR(1),
+				allowNull: false,
+				defaultValue: 'A'
 			}
 		},{
 			timestamps: false, 

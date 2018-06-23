@@ -2,13 +2,15 @@ module.exports = app => {
 	const Colaborador = app.db.models.Colaborador;
 	const Empresa = app.db.models.Empresa;
 	const Estabelecimento = app.db.models.Estabelecimento;
-	const Usuario = app.db.models.Usuario;
-	
+	const Usuario = app.db.models.Usuario;	
+	const Gestor = app.db.models.Gestor;
+
 	Usuario.hasOne(Colaborador, {as: "Colaboradores",through: "Colaborador_Usuario", foreignKey: "id_usuario"});
 	Colaborador.belongsTo(Usuario, { as:"Usuarios",through: "Colaborador_Usuario",foreignKey: "id_usuario"});
 	Colaborador.belongsTo(Estabelecimento, { as: "Estabelecimentos", through: "Colaborador_Estabelecimento", foreignKey: "id_estabelecimento"});
 	Colaborador.belongsTo(Empresa, { as: "Empresas", through: "Colaborador_Empresa", foreignKey: "id_empresa"});
-	
+	Colaborador.hasOne(Gestor, {as: "Gestor",through: "Gestor_Colaborador", foreignKey: "id_colaborador"});
+
 	app.route("/colaborador")
 		.all((req,res, next) => {
 			delete req.body.id;
@@ -79,7 +81,23 @@ module.exports = app => {
 		})
 	app.get("/colaborador/empresa/:id_empresa", (req, res) => {
 			Colaborador.findAll({where: {id_empresa: req.params['id_empresa']},
-				include: [{model: Usuario, as: "Usuario", where:{situacao:"A"}},{model: Empresa, as: "Empresa"}]}
+				include: [{all:true}]}
+			)
+		.then(result => {
+				if(result) {
+					res.json(result);
+				} else {
+					res.sendStatus(404);
+				}
+			})
+			.catch(error => {
+				res.status(412).json({msg: error.message});
+			});
+
+		});
+	app.get("/colaborador/estabelecimento/:id_estabelecimento", (req, res) => {
+			Colaborador.findAll({where: {id_estabelecimento: req.params['id_estabelecimento']},
+				include: [{all:true}]}
 			)
 		.then(result => {
 				if(result) {
@@ -100,7 +118,7 @@ module.exports = app => {
 		});
 	app.get("/colaborador/:id_colaborador", (req, res) => {
 			Colaborador.findOne({where: req.params,
-			include: [{model: Usuario, as: "Usuarios"},{model: Empresa, as: "Empresas"}]})
+			include: [{all:true}]})
 				.then(result => {
 					if(result) {
 						res.json(result);
@@ -137,13 +155,14 @@ module.exports = app => {
 
 
 	app.delete("/colaborador/:id_colaborador", (req, res) => {
-			Colaborador.update(req.body, {where: req.params,
-			include: [{model: Usuario, as: "Usuarios"}]})
-			.then(colaborador=> {
-					Usuario.update({
-						situacao: "I"
-					}, {where: {id_usuario: colaborador.Usuarios.id_usuario}})
-					.then(result => res.sendStatus(204))
+			Colaborador.findOne({where: req.params})
+				.then(result => {
+					Gestor.destroy({where: req.params}).then(resp=>resp).catch(error => {
+						console.log("Não é Gestor");
+					});
+					Colaborador.destroy({where: req.params})
+					.then(resulta => 
+						Usuario.destroy({where: {id_usuario: result['id_usuario']}}))
 					.catch(error => {
 						res.status(412).json({msg: error.message});
 					});

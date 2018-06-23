@@ -101,11 +101,12 @@ module.exports = app => {
 
 		});
 	app.delete("/vaga/:id_vaga", (req, res) => {
-			Vaga.update({
-				situacao: "O"
-			},{where: req.params})
+			Sensor.destroy({where:req.params}).then(resp=>Vaga.destroy({where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
+					res.status(412).json({msg: error.message});
+				})
+				).catch(error => {
 					res.status(412).json({msg: error.message});
 				});
 		});

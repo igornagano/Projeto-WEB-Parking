@@ -7,14 +7,13 @@ module.exports = app => {
 			next();
 		});
 	app.get("/empresa", (req, res) => {
-			Empresa.findAll({})
+			Empresa.findAll({where: {'situacao': "A"}})
 				.then(result => res.json(result))
 				.catch(error => {
 					res.status(412).json({msg: error.message});
 				});
 		});
 	app.post("/empresa", (req, res) => {
-			console.log(req.body);
 			Empresa.create(req.body)
 				.then(result => res.json(result))
 				.catch(error => {
@@ -43,7 +42,7 @@ module.exports = app => {
 				});
 		});
 	app.delete("/empresa/:id_empresa", (req, res) => {
-			Empresa.destroy({where: req.params})
+			Empresa.update({'situacao': "I"},{where: req.params})
 				.then(result => res.sendStatus(204))
 				.catch(error => {
 					res.status(412).json({msg: error.message});

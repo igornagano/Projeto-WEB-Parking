@@ -101,7 +101,6 @@ module.exports = app => {
 			Cliente.findOne({where: req.params,
 			include: [{model: Usuario, as: "Usuarios"}]})
 			.then(clientes=> {
-				console.log(req.params);
 				Usuario.update({
 					situacao: "I"
 				}, {where: {id_usuario: clientes.Usuarios.id_usuario}})

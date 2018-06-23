@@ -20,6 +20,11 @@ module.exports = (sequelize, Sequelize) => {
 			},
 			horario_fim: {
 				type: Sequelize.TIME
+			},
+			situacao: {
+				type: Sequelize.CHAR(1),
+				allowNull: false,
+				defaultValue: 'A'
 			}
 		},{
 			timestamps: false, 
